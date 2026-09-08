@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
+    // 异步初始化 TypeORM，等 ConfigModule 就绪后再读取数据库配置
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

@@ -14,6 +14,8 @@ export class AuthController {
 
   @Post('register')
   register(@Body() dto: RegisterDto) {
+    console.log('注册');
+
     return this.authService.register(dto);
   }
 
@@ -26,6 +28,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   me(@CurrentUser() user: AuthenticatedUser) {
-    return user;
+    return user || { name: 'taotao' };
   }
 }

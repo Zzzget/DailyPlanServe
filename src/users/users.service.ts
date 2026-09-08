@@ -35,6 +35,9 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
+  /**
+   * 脱敏输出：过滤掉 passwordHash 等敏感字段，供对外接口使用。
+   */
   toPublic(user: User) {
     return {
       id: user.id,

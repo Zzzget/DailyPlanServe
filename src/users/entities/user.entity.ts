@@ -6,6 +6,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+/**
+ * 用户实体，映射数据库表 users。
+ */
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -15,6 +18,7 @@ export class User {
   @Column({ length: 255 })
   email: string;
 
+  // 只存 bcrypt 哈希，绝不存明文密码
   @Column({ name: 'password_hash', length: 255 })
   passwordHash: string;
 

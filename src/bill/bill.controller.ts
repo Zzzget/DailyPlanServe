@@ -12,6 +12,7 @@ import { QueryBillDto } from './dto/query-bill.dto';
 export class BillController {
   constructor(private readonly billService: BillService) {}
 
+  // 账单接口均需登录；userId 取自 token（@CurrentUser），而非前端传参
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post('create')

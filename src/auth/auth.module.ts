@@ -6,12 +6,14 @@ import type { StringValue } from 'ms';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
+    // 异步读取 JWT 配置（secret、过期时间），依赖 ConfigModule 先加载
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -25,7 +27,8 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
-  exports: [JwtModule],
+  providers: [AuthService, JwtStrategy, JwtAuthGuard],
+  // 导出 JwtModule 与 JwtAuthGuard，让其他模块（如 BillModule）能注入 JwtService / 使用守卫
+  exports: [JwtModule, JwtAuthGuard],
 })
 export class AuthModule {}

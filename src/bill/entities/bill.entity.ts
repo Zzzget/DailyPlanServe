@@ -30,15 +30,21 @@ export const BILL_CATEGORIES = {
   ],
 };
 
+/**
+ * 账单实体，映射数据库表 bill_records。
+ * userId 字段用于数据隔离，保证每笔账单归属明确。
+ */
 @Entity('bill_records')
 export class Bill {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  // 归属用户，所有查询都以此过滤
   @Index()
   @Column({ name: 'user_id', length: 36 })
   userId: string;
 
+  // 与 User 实体的外键关系，删除用户时级联删除其账单
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   user: User;
 
@@ -46,6 +52,7 @@ export class Bill {
   @Column({ type: 'enum', enum: BillType })
   type: BillType;
 
+  // 金额用 decimal 存储，避免浮点精度问题
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   amount: number;
 
@@ -59,6 +66,7 @@ export class Bill {
   @Column({ length: 200, nullable: true })
   note?: string;
 
+  // 由 TypeORM 自动维护的创建/更新时间
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
