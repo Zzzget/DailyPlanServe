@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -8,6 +8,7 @@ interface JwtPayload {
   sub: string;
   email: string;
   nickname: string;
+  type?: string;
 }
 
 /**
@@ -29,6 +30,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * 供 @CurrentUser() 装饰器读取。
    */
   validate(payload: JwtPayload): AuthenticatedUser {
+    // 双 token 体系下只接受 access 类型，防止 refresh token 被拿去访问业务接口
+    if (payload.type !== 'access') {
+      throw new UnauthorizedException('无效的访问令牌');
+    }
     return {
       id: payload.sub,
       email: payload.email,

@@ -13,8 +13,12 @@ export default () => ({
     synchronize: (process.env.DB_SYNCHRONIZE ?? 'true') === 'true',
   },
   jwt: {
+    // 双 token：access 短期无状态，refresh 长期且与 access 使用不同密钥隔离
     secret: process.env.JWT_SECRET ?? 'change-me-in-production',
-    expiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
+    expiresIn: process.env.JWT_EXPIRES_IN ?? '15m',
+    refreshSecret:
+      process.env.JWT_REFRESH_SECRET ?? 'change-me-refresh-in-production',
+    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
   },
   upload: {
     dir: process.env.UPLOAD_DIR ?? 'uploads',
